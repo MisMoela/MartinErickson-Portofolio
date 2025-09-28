@@ -60,8 +60,8 @@
 
     --card: 0 0% 100%;
 
-    --primary: 250 47% 60%;
-    --primary-foreground: 210 40% 90%;
+    --primary: 210 70% 55%;       
+    --primary-foreground: 0 0% 100%;  
 
     --border: 214 32% 91%;
   }
@@ -73,7 +73,7 @@
 
     --card: 222 47% 8%;
 
-    --primary: 250 65% 65%;
+    --primary: 210 80% 60%;
     --primary-foreground: 213 31% 91%;
 
     --border: 217 33% 20%;
@@ -130,12 +130,24 @@
 }
 
 @utility star {
-  @apply absolute rounded-full bg-white;
+  @apply absolute rounded-full;
+  background-color: hsl(var(--primary));
+  box-shadow: 0 0 10px 2px hsl(var(--primary) / 0.4);
+}
+
+.dark .star {
+  background-color: white;
   box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
 }
 
 @utility meteor {
-  @apply absolute rounded-full bg-gradient-to-r from-white via-white to-transparent;
+  @apply absolute rounded-full;
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary)) 30%, transparent);
+  box-shadow: 0 0 10px 5px hsl(var(--primary) / 0.3);
+}
+
+.dark .meteor {
+  background: linear-gradient(to right, white, white 30%, transparent);
   box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.3);
 }
 
