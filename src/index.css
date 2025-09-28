@@ -64,6 +64,9 @@
     --primary-foreground: 0 0% 100%;  
 
     --border: 214 32% 91%;
+
+    /* New: Card outline in light mode */
+    --card-border: var(--primary);
   }
 
   .dark {
@@ -77,6 +80,9 @@
     --primary-foreground: 213 31% 91%;
 
     --border: 217 33% 20%;
+
+    /* New: Card outline in dark mode (keep subtle) */
+    --card-border: var(--border);
   }
 
   * {
@@ -110,6 +116,11 @@
 @utility text-glow {
   @apply relative;
   text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+@utility card {
+  @apply bg-card rounded-lg border;
+  border-color: hsl(var(--card-border)); /* 👈 use the card border var */
 }
 
 @utility card-hover {
