@@ -1,6 +1,7 @@
 import { Instagram, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useToast } from "../hooks/use-toast";
+import { useState } from "react";
 
 // Define the shape of the toast props for type safety
 interface ToastProps {
@@ -11,17 +12,23 @@ interface ToastProps {
 // ContactSection component with TypeScript
 export const ContactSection = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle form submission with typed event
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSubmitting(true)
 
     setTimeout(() => {
       toast({
         title: "Message sent!",
         description: "Thank you for your message, I'll get back to you soon!",
       } as ToastProps);
+      setIsSubmitting(false);
     }, 1500);
+
+
   };
 
   return (
@@ -39,8 +46,8 @@ export const ContactSection = () => {
           <div className="space-y-8">
             <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
 
-            <div className="space-y-6 justify-center">
-              <div className="flex items-start space-x-4">
+            <div className="space-y-6 text-left">
+              <div className="flex items-center space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
@@ -55,7 +62,7 @@ export const ContactSection = () => {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
+              <div className="flex items-center space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
@@ -70,7 +77,7 @@ export const ContactSection = () => {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
+              <div className="flex items-center space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
@@ -141,12 +148,13 @@ export const ContactSection = () => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className={cn(
                   "w-full flex items-center justify-center gap-2",
-                  "bg-primary text-primary-foreground px-4 py-3 rounded-md hover:bg-primary/90 transition-colors"
+                  "bg-primary text-primary-foreground px-4 py-3 rounded-full hover:bg-primary/90 transition-colors"
                 )}
               >
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
                 <Send size={16} />
               </button>
             </form>
