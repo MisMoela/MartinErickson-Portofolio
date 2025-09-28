@@ -47,7 +47,31 @@
     70% { opacity: 1; }
     100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
   }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 }
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.track {
+  display: inline-flex;
+  animation: scroll 20s linear infinite;
+}
+
 
 /* ============================
    BASE STYLES
@@ -67,6 +91,9 @@
 
     /* New: Card outline in light mode */
     --card-border: var(--primary);
+
+    /* 👇 Custom font */
+    --font-family: 'UwaisSans', sans-serif;
   }
 
   .dark {
@@ -96,6 +123,7 @@
   body {
     @apply bg-background text-foreground transition-colors duration-300;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-family); /* 👈 apply globally */
   }
 }
 
@@ -155,6 +183,14 @@
   @apply absolute rounded-full;
   background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary)) 30%, transparent);
   box-shadow: 0 0 10px 5px hsl(var(--primary) / 0.3);
+}
+
+/* 👇 Custom Font Import */
+@font-face {
+  font-family: 'UwaisSans';
+  src: url('/src/assets/fonts/uwais.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 .dark .meteor {

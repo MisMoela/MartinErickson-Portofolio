@@ -12,18 +12,27 @@ const navItems = [
 ];
 
 export const Navbar = () => {
-  const [isScrolled, setisScrolled] = useState(false);
-  const [isMenuOpen, setMenuisOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setMenuIsOpen] = useState(false);
 
-  // efek background blur di navbar
+  // handle background blur on scroll
   useEffect(() => {
     const handleScroll = () => {
-      setisScrolled(window.scrollY > 10); // ✅ fixed from screenY → scrollY
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // ✅ Disable scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isMenuOpen]);
 
   return (
     <nav
@@ -43,7 +52,7 @@ export const Navbar = () => {
           </span>
         </a>
 
-        {/* desktop */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex items-center space-x-8">
           {navItems.map((item, key) => (
             <a
@@ -59,39 +68,51 @@ export const Navbar = () => {
           <ThemeToggle />
         </div>
 
-        {/* mobile toggle button */}
+        {/* Mobile toggle button */}
         <button
-          onClick={() => setMenuisOpen((prev) => !prev)}
+          onClick={() => setMenuIsOpen((prev) => !prev)}
           className="md:hidden p-2 text-foreground z-50"
           aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* mobile menu */}
+        {/* Mobile Menu */}
         <div
           className={cn(
-            "fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center",
+            "fixed inset-0 h-screen bg-background/95 backdrop-blur-md z-50 flex flex-col items-center justify-center overflow-y-auto",
             "transition-all duration-300 md:hidden",
             isMenuOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           )}
         >
+          {/* ✅ Theme toggle top-left */}
+          <div className="absolute top-4 left-4">
+            <ThemeToggle />
+          </div>
+
+          {/* ✅ Close button top-right */}
+          <button
+            onClick={() => setMenuIsOpen(false)}
+            className="absolute top-4 right-4 p-2 text-foreground"
+            aria-label="Close Menu"
+          >
+            <X size={24} />
+          </button>
+      
+          {/* Mobile nav links */}
           <div className="flex flex-col space-y-8 text-xl items-center">
             {navItems.map((item, key) => (
               <a
                 key={key}
                 href={item.href}
                 className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                onClick={() => setMenuisOpen(false)}
+                onClick={() => setMenuIsOpen(false)}
               >
                 {item.name}
               </a>
             ))}
-
-            {/* ✅ Theme Toggle button (mobile) */}
-            <ThemeToggle />
           </div>
         </div>
       </div>

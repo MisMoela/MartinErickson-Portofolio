@@ -1,7 +1,8 @@
 import { Instagram, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useToast } from "../hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 // Define the shape of the toast props for type safety
 interface ToastProps {
@@ -9,26 +10,44 @@ interface ToastProps {
   description: string;
 }
 
-// ContactSection component with TypeScript
 export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // Handle form submission with typed event
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    setIsSubmitting(true)
+    if (!formRef.current) return;
 
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message, I'll get back to you soon!",
-      } as ToastProps);
-      setIsSubmitting(false);
-    }, 1500);
-
-
+    emailjs
+      .sendForm(
+        "service_hrivaqm", // 🔑 Replace with your service ID
+        "template_hj0pkwc", // 🔑 Replace with your template ID
+        formRef.current,
+        {
+          publicKey: "ZbHI2nMIsXx8YcvHP", // 🔑 Replace with your public key
+        }
+      )
+      .then(
+        () => {
+          toast({
+            title: "Message sent!",
+            description: "Thank you for your message, I'll get back to you soon!",
+          } as ToastProps);
+          setIsSubmitting(false);
+          formRef.current?.reset(); // ✅ reset form after sending
+        },
+        (error) => {
+          toast({
+            title: "Message failed",
+            description: "Something went wrong. Please try again later.",
+          } as ToastProps);
+          console.error("FAILED...", error.text);
+          setIsSubmitting(false);
+        }
+      );
   };
 
   return (
@@ -39,10 +58,12 @@ export const ContactSection = () => {
         </h2>
 
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Have a project in mind or want to collaborate? Feel free to reach out. I'm always open to seeking new opportunities
+          Have a project in mind or want to collaborate? Feel free to reach out. 
+          I'm always open to seeking new opportunities
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Contact info */}
           <div className="space-y-8">
             <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
 
@@ -83,9 +104,7 @@ export const ContactSection = () => {
                 </div>
                 <div>
                   <h4 className="font-medium">Location</h4>
-                  <a className="text-muted-foreground hover:text-primary transition-colors">
-                    Jakarta, Indonesia
-                  </a>
+                  <span className="text-muted-foreground">Jakarta, Indonesia</span>
                 </div>
               </div>
             </div>
@@ -93,20 +112,31 @@ export const ContactSection = () => {
             <div className="pt-8">
               <h4 className="font-medium mb-4">Connect with Me</h4>
               <div className="flex space-x-4 justify-center">
-                <a href="https://www.linkedin.com/in/martin-erickson-10b930307/">
+                <a
+                  href="https://www.linkedin.com/in/martin-erickson-10b930307/"
+                  aria-label="LinkedIn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                 </a>
-                <a href="https://www.instagram.com/m4rtin.17/">
+                <a
+                  href="https://www.instagram.com/m4rtin.17/"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="bg-card p-8 rounded-lg shadow-xs">
+          {/* Contact form card */}
+          <div className="card p-8 shadow-xs">
             <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Your Name
@@ -114,12 +144,13 @@ export const ContactSection = () => {
                 <input
                   type="text"
                   id="name"
-                  name="name"
+                  name="user_name"
                   required
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Your Name..."
                 />
               </div>
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
                   Your Email
@@ -127,12 +158,13 @@ export const ContactSection = () => {
                 <input
                   type="email"
                   id="email"
-                  name="email"
+                  name="user_email"
                   required
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="yourgmail@email.com..."
                 />
               </div>
+
               <div>
                 <label htmlFor="message" className="block text-sm font-medium mb-2">
                   Your Message
