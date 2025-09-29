@@ -59,22 +59,25 @@ export const StarBackground = () => {
   };
 
   const generateMeteors = () => {
-    const numberOfMeteors = 4
+    const numberOfMeteors = 7;
     const newMeteors: Meteor[] = [];
 
     for (let i = 0; i < numberOfMeteors; i++) {
       newMeteors.push({
         id: i,
         size: Math.random() * 2 + 1,
-        x: Math.random() * 100,
-        y: Math.random() * 20,
-        delay: -(Math.random() * 15), 
+        // 👇 spawn anywhere from -20% (off-screen left) up to 5% (just entering)
+        x: Math.random() * 25 - 20,   
+        // 👇 full screen vertical range
+        y: Math.random() * 100,
+        delay: -(Math.random() * 15),
         animationDuration: Math.random() * 3 + 3,
       });
     }
 
     setMeteors(newMeteors);
   };
+
 
   return <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
     {stars.map((star) => (
